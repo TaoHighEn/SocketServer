@@ -54,9 +54,12 @@ namespace SocketServer
             {
                 try
                 {
+                    int id;
                     //通過clientSocket接收資料
                     int receiveNumber = myClientSocket.Receive(result);
                     Console.WriteLine("接收客戶端{0}訊息{1}", myClientSocket.RemoteEndPoint.ToString(), Encoding.ASCII.GetString(result, 0, receiveNumber));
+                    id = Int32.Parse(Encoding.ASCII.GetString(result, 0, receiveNumber));
+                    serverConn(id);
                 }
                 catch (Exception ex)
                 {
@@ -66,6 +69,21 @@ namespace SocketServer
                     break;
                 }
             }
+        }
+
+        //與Wowza主機連線Test
+        public static void serverConn(int id)
+        {
+            Program work = new Program();
+            //ParameterizedThreadStart s = new ParameterizedThreadStart(Hello);
+            Thread thread = new Thread(new ParameterizedThreadStart(ThreadWork));
+            thread.Start(id);
+        }
+
+        //Thread Work
+        public static void ThreadWork(object id)
+        {
+            Console.Write(id);
         }
     }
 }
